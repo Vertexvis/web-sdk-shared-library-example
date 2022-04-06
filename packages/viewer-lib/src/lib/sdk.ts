@@ -28,12 +28,8 @@ export function useSDK({
   useEffect(() => {
     async function setup(): Promise<void> {
       if (withPolyfills || withDefineCustomElements) {
-        // Use a dynamic import so NextJS does not attempt to render this
-        // component with SSR, and to force bundlers to create a separate bundle
-        // for the SDK.
-        const module = await import('@vertexvis/viewer/loader');
-
         if (withPolyfills) {
+          const module = await import('@vertexvis/viewer/loader');
           await module.applyPolyfills();
         }
 
@@ -41,7 +37,13 @@ export function useSDK({
           if (typeof withDefineCustomElements === 'function') {
             await withDefineCustomElements();
           } else {
-            await module.defineCustomElements();
+            // Use a dynamic import so NextJS does not attempt to render this
+            // component with SSR, and to force bundlers to create a separate bundle
+            // for the SDK.
+            const module = await import(
+              '@vertexvis/viewer/dist/custom-elements'
+            );
+            module.defineCustomElements();
           }
         }
       }

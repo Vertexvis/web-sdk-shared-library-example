@@ -1,12 +1,5 @@
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-
-// Peer deps expected to be installed in the consuming app.
-const external = [
-  'react',
-  '@vertexvis/viewer',
-  '@vertexvis/viewer-react',
-  '@vertexvis/viewer/loader',
-];
 
 export default {
   input: 'src/index.ts',
@@ -14,6 +7,6 @@ export default {
     dir: 'dist',
     format: 'esm',
   },
-  plugins: [typescript()],
-  external,
+  plugins: [typescript(), nodeResolve()],
+  external: ['react', 'react-dom'],
 };
